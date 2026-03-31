@@ -1,0 +1,87 @@
+.blogSection {
+  padding: 4rem 1rem;
+  background-color: #f8fafc;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+/* Gạch chân trang trí dưới tiêu đề */
+.title::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background-color: #2563eb;
+  border-radius: 2px;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+.grid {
+  display: grid;
+  /* Tự động chia cột: tối thiểu 300px, tối đa chia đều */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.btnLoadMore {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnLoadMore:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+/* Điều chỉnh khi màn hình nhỏ */
+@media (max-width: 640px) {
+  .header {
+    text-align: center;
+  }
+  
+  .title::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .grid {
+    grid-template-columns: 1fr; /* 1 cột trên điện thoại */
+  }
+}

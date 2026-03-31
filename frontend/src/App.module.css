@@ -1,0 +1,133 @@
+.hero {
+  background-color: #ffffff;
+  padding: 8rem 1rem 10rem; /* Tăng padding để tạo khoảng trống */
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Thêm hiệu ứng nền lưới nhè nhẹ (tùy chọn) */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(#f1f5f9 1px, transparent 1px),
+    linear-gradient(90deg, #f1f5f9 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+.container {
+  max-width: 900px; /* Bóp hẹp lại để text dễ đọc */
+  margin: 0 auto;
+  position: relative;
+  z-index: 2; /* Nằm trên nền lưới */
+}
+
+.badge {
+  display: inline-block;
+  background-color: #eff6ff;
+  color: #2563eb;
+  padding: 0.5rem 1.25rem;
+  border-radius: 99px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  border: 1px solid #dbeafe;
+}
+
+.title {
+  font-size: 4rem; /* Kích thước chữ lớn, đậm */
+  font-weight: 800;
+  color: #111827;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -2px;
+}
+
+.title span {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #4b5563;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.actions button {
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnPrimary {
+  background-color: #2563eb;
+  border: 1px solid #2563eb;
+  color: white;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.15);
+}
+
+.btnPrimary:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.2);
+}
+
+.btnSecondary {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.btnSecondary:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero {
+    padding: 5rem 1rem 6rem;
+  }
+
+  .title {
+    font-size: 2.75rem;
+    letter-spacing: -1px;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}
