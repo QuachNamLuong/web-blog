@@ -4,15 +4,15 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
+
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Write from "./pages/Write";
 import Home from "./pages/Home";
 import Single from "./pages/Single";
-import Navbar from "./components/Navbar";
+import Write from "./pages/Write";
 import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
 import "./style.scss";
-
 const Layout = () => {
   return (
     <>
@@ -22,7 +22,6 @@ const Layout = () => {
     </>
   );
 };
-
 const router = createBrowserRouter([
   {
     path: "/",

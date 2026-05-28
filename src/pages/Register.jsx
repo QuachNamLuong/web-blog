@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -10,6 +9,7 @@ const Register = () => {
     password: "",
   });
   const [err, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,23 +19,28 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
     try {
       await axios.post("/api/auth/register", inputs);
       navigate("/login");
     } catch (err) {
-      setError(err.response.data);
+      setError(err.response?.data || "Đăng ký thất bại. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="auth">
       <h1>Register</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
           required
           type="text"
           placeholder="username"
           name="username"
+          value={inputs.username}
           onChange={handleChange}
         />
         <input
@@ -43,6 +48,7 @@ const Register = () => {
           type="email"
           placeholder="email"
           name="email"
+          value={inputs.email}
           onChange={handleChange}
         />
         <input
@@ -50,10 +56,13 @@ const Register = () => {
           type="password"
           placeholder="password"
           name="password"
+          value={inputs.password}
           onChange={handleChange}
         />
-        <button onClick={handleSubmit}>Register</button>
-        {err && <p>{err}</p>}
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
+        {err && <p className="error">{err}</p>}
         <span>
           Do you have an account? <Link to="/login">Login</Link>
         </span>

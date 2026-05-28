@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -11,52 +11,82 @@ const Write = () => {
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
+  const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const upload = async () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post("/api/upload", formData);
+      const res = await axios.post("/api/upload", formData, {
+        withCredentials: true,
+      });
       return res.data;
     } catch (err) {
       console.log(err);
+      return "";
     }
   };
 
   const handleClick = async (e) => {
     e.preventDefault();
-    const imgUrl = await upload();
 
+    if (!title.trim() || !value.trim() || !cat) {
+      alert("Vui lòng nhập đầy đủ tiêu đề, nội dung và chọn category.");
+      return;
+    }
+
+    setLoading(true);
     try {
-      state
-        ? await axios.put(`/api/posts/${state.id}`, {
+      let imgUrl = state?.img || "";
+      if (file) imgUrl = await upload();
+
+      if (state) {
+        await axios.put(
+          `/api/posts/${state.id}`,
+          { title, desc: value, cat, img: imgUrl },
+          { withCredentials: true },
+        );
+      } else {
+        await axios.post(
+          `/api/posts/`,
+          {
             title,
             desc: value,
             cat,
-            img: file ? imgUrl : "",
-          })
-        : await axios.post(`/api/posts/`, {
-            title,
-            desc: value,
-            cat,
-            img: file ? imgUrl : "",
+            img: imgUrl,
             date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
-          navigate("/")
+          },
+          { withCredentials: true },
+        );
+      }
+
+      navigate("/");
     } catch (err) {
       console.log(err);
+      alert("Có lỗi xảy ra. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const categories = [
+    "art",
+    "science",
+    "technology",
+    "cinema",
+    "design",
+    "food",
+  ];
 
   return (
     <div className="add">
       <div className="content">
         <input
           type="text"
-          placeholder="Title"
           value={title}
+          placeholder="Title"
           onChange={(e) => setTitle(e.target.value)}
         />
         <div className="editorContainer">
@@ -68,98 +98,52 @@ const Write = () => {
           />
         </div>
       </div>
+
       <div className="menu">
         <div className="item">
           <h1>Publish</h1>
           <span>
-            <b>Status: </b> Draft
+            <b>Status:</b> Draft
           </span>
           <span>
-            <b>Visibility: </b> Public
+            <b>Visibility:</b> Public
           </span>
           <input
             style={{ display: "none" }}
             type="file"
             id="file"
-            name=""
             onChange={(e) => setFile(e.target.files[0])}
           />
           <label className="file" htmlFor="file">
-            Upload Image
+            {file ? file.name : "Upload Image"}
           </label>
           <div className="buttons">
-            <button>Save as a draft</button>
-            <button onClick={handleClick}>Publish</button>
+            <button type="button" disabled={loading}>
+              Save as a draft
+            </button>
+            <button type="button" onClick={handleClick} disabled={loading}>
+              {loading ? "Publishing..." : "Publish"}
+            </button>
           </div>
         </div>
+
         <div className="item">
           <h1>Category</h1>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "art"}
-              name="cat"
-              value="art"
-              id="art"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="art">Art</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "science"}
-              name="cat"
-              value="science"
-              id="science"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="science">Science</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "technology"}
-              name="cat"
-              value="technology"
-              id="technology"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="technology">Technology</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "cinema"}
-              name="cat"
-              value="cinema"
-              id="cinema"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="cinema">Cinema</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "design"}
-              name="cat"
-              value="design"
-              id="design"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="design">Design</label>
-          </div>
-          <div className="cat">
-            <input
-              type="radio"
-              checked={cat === "food"}
-              name="cat"
-              value="food"
-              id="food"
-              onChange={(e) => setCat(e.target.value)}
-            />
-            <label htmlFor="food">Food</label>
-          </div>
+          {categories.map((c) => (
+            <div className="cat" key={c}>
+              <input
+                type="radio"
+                checked={cat === c}
+                name="cat"
+                value={c}
+                id={c}
+                onChange={(e) => setCat(e.target.value)}
+              />
+              <label htmlFor={c}>
+                {c.charAt(0).toUpperCase() + c.slice(1)}
+              </label>
+            </div>
+          ))}
         </div>
       </div>
     </div>
